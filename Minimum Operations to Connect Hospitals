@@ -1,0 +1,38 @@
+class Solution:
+    def minConnect(self, V, edges):
+        parent = list(range(V))
+        rank = [0] * V
+        
+        def find(x):
+            if parent[x] != x:
+                parent[x] = find(parent[x])
+            return parent[x]
+        
+        def union(x, y):
+            rx, ry = find(x), find(y)
+            if rx != ry:
+                if rank[rx] > rank[ry]:
+                    parent[ry] = rx
+                elif rank[rx] < rank[ry]:
+                    parent[rx] = ry
+                else:
+                    parent[ry] = rx
+                    rank[rx] += 1
+                return True     # union performed
+            return False        # redundant edge
+        
+        extra_edges = 0
+        
+        # Process edges and count redundant ones
+        for u, v in edges:
+            if not union(u, v):
+                extra_edges += 1
+        
+        # Count number of connected components
+        components = len({find(i) for i in range(V)})
+        
+        # To connect components, at least (components - 1) edges needed
+        if extra_edges < components - 1:
+            return -1
+        
+        return components - 1
