@@ -1,0 +1,24 @@
+class Solution {
+  public:
+    bool check(vector<int>&arr,int value){
+        int cnt=0;
+        for(int i:arr){
+            if(i>=value)cnt++;
+        }
+        return cnt>=value;
+    }
+    int hIndex(vector<int>& arr) {
+        // code here
+        int low=0,high=*max_element(arr.begin(),arr.end());
+        int ans=-1;
+        while(low<=high){
+            int mid=low+(high-low)/2;
+            if(check(arr,mid)){
+                ans=mid;
+                low=mid+1;
+            } else high=mid-1;
+        }
+        return ans;
+    }
+};
+
